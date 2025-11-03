@@ -166,7 +166,7 @@ const ExpensesPage = () => {
             <div>
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl">My Budgets</h2>
-                    <Button onClick={() => navigate("/budgets/new")} variant="outline">
+                    <Button onClick={() => navigate("/budgets/new")}>
                         <Plus className="w-4 h-4 mr-2" />
                         Add Budget
                     </Button>
