@@ -14,10 +14,10 @@ export const budgetSchema = z.object({
 
 // Matches BudgetInsertDTO
 export const budgetInsertSchema = z.object({
-    categoryId: z.coerce.number().int().min(1, { message: "Category is required" }),
-    limitAmount: z.coerce.number().min(0.01, { message: "Limit must be greater than 0" }),
-    startDate: z.coerce.date(),
-    endDate: z.coerce.date(),
+    categoryId: z.number().int().min(1, { message: "Category is required" }),
+    limitAmount: z.number().min(0.01, { message: "Limit must be greater than 0" }),
+    startDate: z.date(),
+    endDate: z.date(),
 }).refine((data) => data.endDate > data.startDate, {
     message: "End date must be after start date",
     path: ["endDate"],

@@ -7,9 +7,7 @@ export const userSchema = z.object({
         .string()
         .min(2, { message: "Username must be at least 2 characters" })
         .max(50, { message: "Username cannot exceed 50 characters" }),
-    email: z
-        .string()
-        .email({ message: "Invalid email format" }),
+    email: z.email({ message: "Invalid email format" }), // ✅ CHANGED: Removed .string()
     firstname: z
         .string()
         .min(2, { message: "First name must be at least 2 characters" })
@@ -29,10 +27,8 @@ export const userInsertSchema = z.object({
         .min(2, { message: "Username must be at least 2 characters" })
         .max(50, { message: "Username cannot exceed 50 characters" }),
     email: z
-        .string()
-        .trim()
-        .toLowerCase()
-        .email({ message: "Invalid email format" }),
+        .email({ message: "Invalid email format" })  // ✅ CHANGED: Removed .string().trim().toLowerCase()
+        .toLowerCase(), // Keep toLowerCase for consistency
     firstname: z
         .string()
         .min(2, { message: "First name must be at least 2 characters" })
@@ -57,10 +53,8 @@ export const userUpdateSchema = z.object({
         .min(2, { message: "Username must be at least 2 characters" })
         .max(50, { message: "Username cannot exceed 50 characters" }),
     email: z
-        .string()
-        .trim()
-        .toLowerCase()
-        .email({ message: "Invalid email format" }),
+        .email({ message: "Invalid email format" })  // ✅ CHANGED: Removed .string().trim().toLowerCase()
+        .toLowerCase(), // Keep toLowerCase for consistency
     firstname: z
         .string()
         .min(2, { message: "First name must be at least 2 characters" })
@@ -78,10 +72,8 @@ export const userRegisterSchema = z.object({
         .min(2, { message: "Username must be at least 2 characters" })
         .max(50, { message: "Username cannot exceed 50 characters" }),
     email: z
-        .string()
-        .trim()
-        .toLowerCase()
-        .email({ message: "Invalid email format" }),
+        .email({ message: "Invalid email format" })  // ✅ CHANGED: Removed .string().trim().toLowerCase()
+        .toLowerCase(), // Keep toLowerCase for consistency
     firstname: z
         .string()
         .min(2, { message: "First name must be at least 2 characters" })

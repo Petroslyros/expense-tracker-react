@@ -18,8 +18,8 @@ export const expenseSchema = z.object({
 // Insert/Update schema (ExpenseInsertDTO)
 export const expenseInsertSchema = z.object({
     title: z.string().min(1, { message: "Title is required" }),
-    amount: z.coerce.number().min(0, { message: "Amount must be non-negative" }),
-    date: z.coerce.date(),
+    amount: z.number().min(0, { message: "Amount must be non-negative" }),
+    date: z.date(),
     categoryName: z.string().min(1, { message: "Category name is required" }),
 });
 
