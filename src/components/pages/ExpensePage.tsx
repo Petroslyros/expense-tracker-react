@@ -99,6 +99,7 @@ const ExpensePage = () => {
             >
                 <div>
                     <Label htmlFor="title">Title</Label>
+                    {/*register is tracking title for errors*/}
                     <Input id="title" {...register("title")} />
                     {errors.title && (
                         <div className="text-red-600 text-sm">{errors.title.message}</div>

@@ -8,45 +8,61 @@ import { toast } from "sonner";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "@/hooks/useAuth.ts";
 
-//The login form that uses react-hook-form for form management and Zod for validation,
-// then authenticates the user via the auth context.
 export default function LoginPage() {
     const navigate = useNavigate();
-    const { loginUser } = useAuth();  // Get loginUser function from auth context
+    const { loginUser } = useAuth();
 
-    // useForm is the main react-hook-form hook - manages form state and validation
     const {
-        register,        // Function to register input fields
-        handleSubmit,    // Wraps your submit handler with validation
-        formState: { errors, isSubmitting },  // Form state (errors, loading, etc.)
-    } = useForm<UserLogin>({  // TypeScript generic specifies the form data shape
-        resolver: zodResolver(userLoginSchema),  // zodResolver connects Zod validation to react-hook-form
-        defaultValues: {  // Initial form values
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        setError,
+    } = useForm<UserLogin>({
+        resolver: zodResolver(userLoginSchema),
+        defaultValues: {
             username: "",
             password: "",
             keepLoggedIn: false,
         }
     });
 
-    // This function only runs if validation passes
-    // react-hook-form automatically validates before calling this
     const onSubmit = async (data: UserLogin) => {
         try {
-            await loginUser(data);  // Call context function to login
-            toast.success("Login successful");  // Show success notification
-            navigate("/expenses");  // Redirect to expenses page
+            await loginUser(data);
+            toast.success("Login successful");
+            navigate("/expenses");
         } catch (err) {
-            // Type guard: check if err is an Error instance to safely access .message
-            toast.error(
-                err instanceof Error ? err.message : "Login failed"
-            );
+            // Debug: log what error we're getting
+            console.error("Login error:", err);
+
+            // Backend throws "Bad Credentials" for any auth failure
+            // Don't specify which field is wrong (security best practice)
+            if (err instanceof Error) {
+                console.log("Error message:", err.message);
+
+                if (err.message.includes("Bad Credentials") || err.message.includes("Unauthorized") || err.message.includes("Login failed")) {
+                    // Set error on both fields so user knows something was wrong
+                    setError("username", {
+                        type: "manual",
+                        message: "Invalid username or password"
+                    });
+                    setError("password", {
+                        type: "manual",
+                        message: "Invalid username or password"
+                    });
+                } else {
+                    // Other errors (network, server error, etc.)
+                    toast.error(err.message || "Login failed");
+                }
+            } else {
+                toast.error("Login failed");
+            }
         }
     };
 
     return (
         <div className="p-8">
             <h1 className="text-2xl text-center mb-6">Login</h1>
-            {/* handleSubmit(onSubmit) creates a wrapper that validates before calling onSubmit */}
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="max-w-sm mx-auto p-8 border rounded-md space-y-4"
@@ -54,9 +70,7 @@ export default function LoginPage() {
             >
                 <div>
                     <Label htmlFor="username">Username</Label>
-                    {/* Spread operator {...register("username")} adds onChange, onBlur, ref, name props */}
                     <Input id="username" {...register("username")} />
-                    {/* Conditional rendering: only show error if it exists */}
                     {errors.username && (
                         <div className="text-red-600 text-sm">
                             {errors.username.message}
@@ -86,9 +100,7 @@ export default function LoginPage() {
                     </Label>
                 </div>
 
-                {/* Button disabled during submission to prevent double-submit */}
                 <Button disabled={isSubmitting} className="w-full">
-                    {/* Conditional text based on submission state */}
                     {isSubmitting ? "Logging in..." : "Login"}
                 </Button>
 

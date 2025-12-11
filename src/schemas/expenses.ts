@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Nested category schema (matches ExpenseCategoryReadOnlyDTO)
+// ExpenseCategoryReadOnlyDTO
 export const expenseCategorySchema = z.object({
     id: z.coerce.number().int(),
     name: z.string().min(1, { message: "Category name is required" }),
